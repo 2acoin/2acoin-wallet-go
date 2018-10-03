@@ -1,4 +1,4 @@
-# TurtleCoin Nest
+# TurtleCoin
 
 The universal desktop GUI wallet for TurtleCoin
 
