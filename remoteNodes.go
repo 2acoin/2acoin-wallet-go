@@ -1,3 +1,9 @@
+// Copyright (c) 2018, The TurtleCoin Developers
+// Copyright (c) 2018, 2ACoin Developers
+//
+// Please see the included LICENSE file for more information.
+//
+
 package main
 
 import (
@@ -17,12 +23,12 @@ type node struct {
 	SSL  bool   `json:"ssl"`
 }
 
-const urlTurtleCoinRemoteNodes = "https://raw.githubusercontent.com/turtlecoin/turtlecoin-nodes-json/master/turtlecoin-nodes.json"
+const urlxCoinRemoteNodes = "https://raw.githubusercontent.com/2acoin/2acoin-nodes-json/master/2acoin-nodes.json"
 
 func requestListRemoteNodes() (remoteNodes []node) {
 
 	theNodes := new(nodes)
-	err := getJSONFromHTTPRequest(urlTurtleCoinRemoteNodes, theNodes)
+	err := getJSONFromHTTPRequest(urlxCoinRemoteNodes, theNodes)
 
 	if err != nil {
 

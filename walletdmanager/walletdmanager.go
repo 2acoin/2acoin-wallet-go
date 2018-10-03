@@ -1,4 +1,5 @@
 // Copyright (c) 2018, The TurtleCoin Developers
+// Copyright (c) 2018, 2ACoin Developers
 //
 // Please see the included LICENSE file for more information.
 //
@@ -7,7 +8,7 @@
 package walletdmanager
 
 import (
-	"TurtleCoin-Nest/turtlecoinwalletdrpcgo"
+	"2ACoin-WalletGo/xcoinwalletdrpcgo"
 	"bufio"
 	"io"
 	"math/rand"
@@ -35,13 +36,13 @@ var (
 	// WalletFilename is the filename of the opened wallet
 	WalletFilename = ""
 
-	// will be set to a random string when starting turtle-service
+	// will be set to a random string when starting 2acoin-service
 	rpcPassword = ""
 
 	cmdWalletd     *exec.Cmd
-	cmdTurtleCoind *exec.Cmd
+	cmdxCoind      *exec.Cmd
 
-	// WalletdOpenAndRunning is true when turtle-service is running with a wallet open
+	// WalletdOpenAndRunning is true when 2acoin-service is running with a wallet open
 	WalletdOpenAndRunning = false
 
 	// WalletdSynced is true when wallet is synced and transfer is allowed
@@ -78,7 +79,7 @@ func Setup(platform string) {
 // RequestBalance provides the available and locked balances of the current wallet
 func RequestBalance() (availableBalance float64, lockedBalance float64, totalBalance float64, err error) {
 
-	availableBalance, lockedBalance, totalBalance, err = turtlecoinwalletdrpcgo.RequestBalance(rpcPassword)
+	availableBalance, lockedBalance, totalBalance, err = xcoinwalletdrpcgo.RequestBalance(rpcPassword)
 	if err != nil {
 		log.Error("error requesting balances. err: ", err)
 	} else {
@@ -95,7 +96,7 @@ func RequestAvailableBalanceToBeSpent(transferFeeString string) (availableBalanc
 		return 0, err
 	}
 
-	transferFee, err := strconv.ParseFloat(transferFeeString, 64) // transferFee is expressed in TRTL
+	transferFee, err := strconv.ParseFloat(transferFeeString, 64) // transferFee is expressed in ARMS
 	if err != nil {
 		return 0, errors.New("fee is invalid")
 	}
@@ -115,7 +116,7 @@ func RequestAvailableBalanceToBeSpent(transferFeeString string) (availableBalanc
 // RequestAddress provides the address of the current wallet
 func RequestAddress() (address string, err error) {
 
-	address, err = turtlecoinwalletdrpcgo.RequestAddress(rpcPassword)
+	address, err = xcoinwalletdrpcgo.RequestAddress(rpcPassword)
 	if err != nil {
 		log.Error("error requesting address. err: ", err)
 	} else {
@@ -125,15 +126,15 @@ func RequestAddress() (address string, err error) {
 }
 
 // RequestListTransactions provides the list of transactions of current wallet
-func RequestListTransactions() (transfers []turtlecoinwalletdrpcgo.Transfer, err error) {
+func RequestListTransactions() (transfers []xcoinwalletdrpcgo.Transfer, err error) {
 
-	walletBlockCount, _, _, _, err := turtlecoinwalletdrpcgo.RequestStatus(rpcPassword)
+	walletBlockCount, _, _, _, err := xcoinwalletdrpcgo.RequestStatus(rpcPassword)
 	if err != nil {
 		log.Error("error getting block count: ", err)
 		return nil, err
 	}
 
-	transfers, err = turtlecoinwalletdrpcgo.RequestListTransactions(walletBlockCount, 1, []string{WalletAddress}, rpcPassword)
+	transfers, err = xcoinwalletdrpcgo.RequestListTransactions(walletBlockCount, 1, []string{WalletAddress}, rpcPassword)
 	if err != nil {
 		log.Error("error requesting list transactions. err: ", err)
 	}
@@ -147,7 +148,7 @@ func SendTransaction(transferAddress string, transferAmountString string, transf
 		return "", errors.New("wallet and/or blockchain not fully synced yet")
 	}
 
-	if !strings.HasPrefix(transferAddress, "TRTL") || (len(transferAddress) != 99 && len(transferAddress) != 187) {
+	if !strings.HasPrefix(transferAddress, "guns") || (len(transferAddress) != 98 && len(transferAddress) != 186) {
 		return "", errors.New("address is invalid")
 	}
 
@@ -155,16 +156,16 @@ func SendTransaction(transferAddress string, transferAmountString string, transf
 		return "", errors.New("sending to yourself is not supported")
 	}
 
-	transferAmount, err := strconv.ParseFloat(transferAmountString, 64) // transferAmount is expressed in TRTL
+	transferAmount, err := strconv.ParseFloat(transferAmountString, 64) // transferAmount is expressed in ARMS
 	if err != nil {
 		return "", errors.New("amount is invalid")
 	}
 
 	if transferAmount <= 0 {
-		return "", errors.New("amount of TRTL to be sent should be greater than 0")
+		return "", errors.New("amount of ARMS to be sent should be greater than 0")
 	}
 
-	transferFee, err := strconv.ParseFloat(transferFeeString, 64) // transferFee is expressed in TRTL
+	transferFee, err := strconv.ParseFloat(transferFeeString, 64) // transferFee is expressed in ARMS
 	if err != nil {
 		return "", errors.New("fee is invalid")
 	}
@@ -177,7 +178,7 @@ func SendTransaction(transferAddress string, transferAmountString string, transf
 		return "", errors.New("your available balance is insufficient")
 	}
 
-	transactionHash, err = turtlecoinwalletdrpcgo.SendTransaction(transferAddress, transferAmount, transferPaymentID, transferFee, rpcPassword)
+	transactionHash, err = xcoinwalletdrpcgo.SendTransaction(transferAddress, transferAmount, transferPaymentID, transferFee, rpcPassword)
 	if err != nil {
 		log.Error("error sending transaction. err: ", err)
 		return "", err
@@ -193,7 +194,7 @@ func OptimizeWalletWithFusion() (transactionHash string, err error) {
 		return "", errors.Wrap(err, "getOptimisedFusionParameters failed")
 	}
 
-	transactionHash, err = turtlecoinwalletdrpcgo.SendFusionTransaction(smallestOptimizedThreshold, []string{WalletAddress}, WalletAddress, rpcPassword)
+	transactionHash, err = xcoinwalletdrpcgo.SendFusionTransaction(smallestOptimizedThreshold, []string{WalletAddress}, WalletAddress, rpcPassword)
 	if err != nil {
 		log.Error("error sending fusion transaction. err: ", err)
 		return "", errors.Wrap(err, "sending fusion transaction failed")
@@ -210,7 +211,7 @@ func getOptimisedFusionParameters() (largestFusionReadyCount int, smallestOptimi
 	smallestOptimizedThreshold = threshold
 
 	for {
-		fusionReadyCount, _, err := turtlecoinwalletdrpcgo.EstimateFusion(threshold, []string{WalletAddress}, rpcPassword)
+		fusionReadyCount, _, err := xcoinwalletdrpcgo.EstimateFusion(threshold, []string{WalletAddress}, rpcPassword)
 		if err != nil {
 			log.Error("error estimating fusion. err: ", err)
 			return 0, 0, err
@@ -231,19 +232,19 @@ func getOptimisedFusionParameters() (largestFusionReadyCount int, smallestOptimi
 // GetPrivateKeys provides the private view and spend keys of the current wallet, and the mnemonic seed if the wallet is deterministic
 func GetPrivateKeys() (isDeterministicWallet bool, mnemonicSeed string, privateViewKey string, privateSpendKey string, err error) {
 
-	isDeterministicWallet, mnemonicSeed, err = turtlecoinwalletdrpcgo.GetMnemonicSeed(WalletAddress, rpcPassword)
+	isDeterministicWallet, mnemonicSeed, err = xcoinwalletdrpcgo.GetMnemonicSeed(WalletAddress, rpcPassword)
 	if err != nil {
 		log.Error("error requesting mnemonic seed. err: ", err)
 		return false, "", "", "", err
 	}
 
-	privateViewKey, err = turtlecoinwalletdrpcgo.GetViewKey(rpcPassword)
+	privateViewKey, err = xcoinwalletdrpcgo.GetViewKey(rpcPassword)
 	if err != nil {
 		log.Error("error requesting view key. err: ", err)
 		return false, "", "", "", err
 	}
 
-	privateSpendKey, _, err = turtlecoinwalletdrpcgo.GetSpendKeys(WalletAddress, rpcPassword)
+	privateSpendKey, _, err = xcoinwalletdrpcgo.GetSpendKeys(WalletAddress, rpcPassword)
 	if err != nil {
 		log.Error("error requesting spend keys. err: ", err)
 		return false, "", "", "", err
@@ -252,10 +253,10 @@ func GetPrivateKeys() (isDeterministicWallet bool, mnemonicSeed string, privateV
 	return isDeterministicWallet, mnemonicSeed, privateViewKey, privateSpendKey, nil
 }
 
-// SaveWallet saves the sync status of the wallet. To be done regularly so when turtle-service crashes, sync is not lost
+// SaveWallet saves the sync status of the wallet. To be done regularly so when 2acoin-service crashes, sync is not lost
 func SaveWallet() (err error) {
 
-	err = turtlecoinwalletdrpcgo.SaveWallet(rpcPassword)
+	err = xcoinwalletdrpcgo.SaveWallet(rpcPassword)
 	if err != nil {
 		log.Error("error saving wallet. err: ", err)
 		return err
@@ -264,15 +265,15 @@ func SaveWallet() (err error) {
 	return nil
 }
 
-// StartWalletd starts the turtle-service daemon with the set wallet info
+// StartWalletd starts the 2acoin-service daemon with the set wallet info
 // walletPath is the full path to the wallet
 // walletPassword is the wallet password
 // useRemoteNode is true if remote node, false if local
-// useCheckpoints is true if TurtleCoind should be run with "--load-checkpoints"
+// useCheckpoints is true if 2ACoind should be run with "--load-checkpoints"
 func StartWalletd(walletPath string, walletPassword string, useRemoteNode bool, useCheckpoints bool, daemonAddress string, daemonPort string) (err error) {
 
 	if isWalletdRunning() {
-		errorMessage := "turtle-service is already running in the background.\nPlease close it via "
+		errorMessage := "2acoin-service is already running in the background.\nPlease close it via "
 
 		if isPlatformWindows {
 			errorMessage += "the task manager"
@@ -288,10 +289,10 @@ func StartWalletd(walletPath string, walletPassword string, useRemoteNode bool, 
 
 	pathToLogWalletdCurrentSession := logWalletdCurrentSessionFilename
 	pathToLogWalletdAllSessions := logWalletdAllSessionsFilename
-	pathToLogTurtleCoindCurrentSession := logTurtleCoindCurrentSessionFilename
-	pathToLogTurtleCoindAllSessions := logTurtleCoindAllSessionsFilename
+	pathToLogxCoindCurrentSession := logxCoindCurrentSessionFilename
+	pathToLogxCoindAllSessions := logxCoindAllSessionsFilename
 	pathToWalletd := "./" + walletdCommandName
-	pathToTurtleCoind := "./" + turtlecoindCommandName
+	pathToxCoind := "./" + xcoindCommandName
 	checkpointsCSVFile := "checkpoints.csv"
 	pathToCheckpointsCSV := "./" + checkpointsCSVFile
 
@@ -312,7 +313,7 @@ func StartWalletd(walletPath string, walletPassword string, useRemoteNode bool, 
 	if isPlatformDarwin {
 		pathToAppContents := filepath.Dir(pathToAppDirectory)
 		pathToWalletd = pathToAppContents + "/" + walletdCommandName
-		pathToTurtleCoind = pathToAppContents + "/" + turtlecoindCommandName
+		pathToxCoind = pathToAppContents + "/" + xcoindCommandName
 		pathToCheckpointsCSV = pathToAppContents + "/" + checkpointsCSVFile
 
 		usr, err := user.Current()
@@ -320,12 +321,12 @@ func StartWalletd(walletPath string, walletPassword string, useRemoteNode bool, 
 			log.Fatal("error finding home directory. Error: ", err)
 		}
 		pathToHomeDir := usr.HomeDir
-		pathToAppLibDir := pathToHomeDir + "/Library/Application Support/TurtleCoin-Nest"
+		pathToAppLibDir := pathToHomeDir + "/Library/Application Support/2ACoin-WalletGo"
 
 		pathToLogWalletdCurrentSession = pathToAppLibDir + "/" + logWalletdCurrentSessionFilename
 		pathToLogWalletdAllSessions = pathToAppLibDir + "/" + logWalletdAllSessionsFilename
-		pathToLogTurtleCoindCurrentSession = pathToAppLibDir + "/" + logTurtleCoindCurrentSessionFilename
-		pathToLogTurtleCoindAllSessions = pathToAppLibDir + "/" + logTurtleCoindAllSessionsFilename
+		pathToLogxCoindCurrentSession = pathToAppLibDir + "/" + xCoindCurrentSessionFilename
+		pathToLogxCoindAllSessions = pathToAppLibDir + "/" + logxCoindAllSessionsFilename
 
 		if pathToWallet == WalletFilename {
 			// if comes from createWallet, so it is not a full path, just a filename
@@ -333,12 +334,12 @@ func StartWalletd(walletPath string, walletPassword string, useRemoteNode bool, 
 		}
 	} else if isPlatformLinux {
 		pathToWalletd = pathToAppDirectory + "/" + walletdCommandName
-		pathToTurtleCoind = pathToAppDirectory + "/" + turtlecoindCommandName
+		pathToxCoind = pathToAppDirectory + "/" + xcoindCommandName
 		pathToCheckpointsCSV = pathToAppDirectory + "/" + checkpointsCSVFile
 		pathToLogWalletdCurrentSession = pathToAppDirectory + "/" + logWalletdCurrentSessionFilename
 		pathToLogWalletdAllSessions = pathToAppDirectory + "/" + logWalletdAllSessionsFilename
-		pathToLogTurtleCoindCurrentSession = pathToAppDirectory + "/" + logTurtleCoindCurrentSessionFilename
-		pathToLogTurtleCoindAllSessions = pathToAppDirectory + "/" + logTurtleCoindAllSessionsFilename
+		pathToLogxCoindCurrentSession = pathToAppDirectory + "/" + logxCoindCurrentSessionFilename
+		pathToLogxCoindAllSessions = pathToAppDirectory + "/" + logxCoindAllSessionsFilename
 		if pathToWallet == WalletFilename {
 			// if comes from createWallet, so it is not a full path, just a filename
 			pathToWallet = pathToAppDirectory + "/" + pathToWallet
@@ -354,7 +355,7 @@ func StartWalletd(walletPath string, walletPassword string, useRemoteNode bool, 
 
 	rpcPassword = randStringBytesMaskImprSrc(20)
 
-	var turtleCoindCurrentSessionLogFile *os.File
+	var xCoindCurrentSessionLogFile *os.File
 
 	if useRemoteNode {
 		cmdWalletd = exec.Command(pathToWalletd, "-w", pathToWallet, "-p", walletPassword, "-l", pathToLogWalletdCurrentSession, "--daemon-address", daemonAddress, "--daemon-port", daemonPort, "--log-level", walletdLogLevel, "--rpc-password", rpcPassword)
@@ -363,54 +364,54 @@ func StartWalletd(walletPath string, walletPassword string, useRemoteNode bool, 
 	}
 	hideCmdWindowIfNeeded(cmdWalletd)
 
-	if !useRemoteNode && !isTurtleCoindRunning() {
+	if !useRemoteNode && !isxCoindRunning() {
 
-		turtleCoindCurrentSessionLogFile, err = os.Create(pathToLogTurtleCoindCurrentSession)
+		xCoindCurrentSessionLogFile, err = os.Create(pathToLogxCoindCurrentSession)
 		if err != nil {
 			log.Error(err)
 		}
-		defer turtleCoindCurrentSessionLogFile.Close()
+		defer xCoindCurrentSessionLogFile.Close()
 
 		if useCheckpoints {
-			cmdTurtleCoind = exec.Command(pathToTurtleCoind, "--load-checkpoints", pathToCheckpointsCSV, "--log-file", pathToLogTurtleCoindCurrentSession)
+			cmdxCoind = exec.Command(pathToxCoind, "--load-checkpoints", pathToCheckpointsCSV, "--log-file", pathToLogxCoindCurrentSession)
 		} else {
-			cmdTurtleCoind = exec.Command(pathToTurtleCoind, "--log-file", pathToLogTurtleCoindCurrentSession)
+			cmdxCoind = exec.Command(pathToxCoind, "--log-file", pathToLogxCoindCurrentSession)
 		}
-		hideCmdWindowIfNeeded(cmdTurtleCoind)
+		hideCmdWindowIfNeeded(cmdxCoind)
 
-		turtleCoindAllSessionsLogFile, err := os.Create(pathToLogTurtleCoindAllSessions)
+		xCoindAllSessionsLogFile, err := os.Create(pathToLogxCoindAllSessions)
 		if err != nil {
 			log.Error(err)
 		}
-		cmdTurtleCoind.Stdout = turtleCoindAllSessionsLogFile
-		defer turtleCoindAllSessionsLogFile.Close()
+		cmdxCoind.Stdout = xCoindAllSessionsLogFile
+		defer xCoindAllSessionsLogFile.Close()
 
-		err = cmdTurtleCoind.Start()
+		err = cmdxCoind.Start()
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 
-		log.Info("Opening TurtleCoind and waiting for it to be ready.")
+		log.Info("Opening 2ACoind and waiting for it to be ready.")
 
-		readerTurtleCoindLog := bufio.NewReader(turtleCoindCurrentSessionLogFile)
+		readerxCoindLog := bufio.NewReader(xCoindCurrentSessionLogFile)
 
 		for {
-			line, err := readerTurtleCoindLog.ReadString('\n')
+			line, err := readerxCoindLog.ReadString('\n')
 			if err != nil {
 				if err != io.EOF {
-					log.Error("Failed reading TurtleCoind log file line by line: ", err)
+					log.Error("Failed reading 2ACoind log file line by line: ", err)
 				}
 			}
 			if strings.Contains(line, "Imported block with index") {
-				log.Info("TurtleCoind importing blocks: ", line)
+				log.Info("2ACoind importing blocks: ", line)
 			}
 			if strings.Contains(line, "Core rpc server started ok") {
-				log.Info("TurtleCoind ready (rpc server started ok).")
+				log.Info("2ACoind ready (rpc server started ok).")
 				break
 			}
 			if strings.Contains(line, "Node stopped.") {
-				errorMessage := "Error TurtleCoind: 'Node stopped'"
+				errorMessage := "Error 2ACoind: 'Node stopped'"
 				log.Error(errorMessage)
 				return errors.New(errorMessage)
 			}
@@ -431,7 +432,7 @@ func StartWalletd(walletPath string, walletPassword string, useRemoteNode bool, 
 		return err
 	}
 
-	log.Info("Opening turtle-service and waiting for it to be ready.")
+	log.Info("Opening 2acoin-service and waiting for it to be ready.")
 
 	timesCheckLog := 0
 	timeBetweenChecks := 100 * time.Millisecond
@@ -454,7 +455,7 @@ func StartWalletd(walletPath string, walletPassword string, useRemoteNode bool, 
 			}
 			if strings.Contains(line, "Wallet loading is finished.") {
 				successLaunchingWalletd = true
-				log.Info("turtle-service ready ('Wallet loading is finished.').")
+				log.Info("2acoin-service ready ('Wallet loading is finished.').")
 				break
 			}
 			if strings.Contains(line, "Imported block with index") {
@@ -468,7 +469,7 @@ func StartWalletd(walletPath string, walletPassword string, useRemoteNode bool, 
 						errorMessage = errorMessage + line
 					}
 				} else {
-					errorMessage = "turtle-service stopped with unknown error"
+					errorMessage = "2acoin-service stopped with unknown error"
 				}
 
 				killWalletd()
@@ -483,10 +484,10 @@ func StartWalletd(walletPath string, walletPassword string, useRemoteNode bool, 
 	}
 
 	// check rpc connection with walletd
-	_, _, _, _, err = turtlecoinwalletdrpcgo.RequestStatus(rpcPassword)
+	_, _, _, _, err = xcoinwalletdrpcgo.RequestStatus(rpcPassword)
 	if err != nil {
 		killWalletd()
-		return errors.New("error communicating with turtle-service via rpc")
+		return errors.New("error communicating with 2acoin-service via rpc")
 	}
 
 	WalletdOpenAndRunning = true
@@ -504,14 +505,14 @@ func GracefullyQuitWalletd() {
 
 		if isPlatformWindows {
 			// because syscall.SIGTERM does not work in windows. We have to manually save the wallet, as we kill walletd.
-			turtlecoinwalletdrpcgo.SaveWallet(rpcPassword)
+			xcoinwalletdrpcgo.SaveWallet(rpcPassword)
 			time.Sleep(3 * time.Second)
 
 			err = cmdWalletd.Process.Kill()
 			if err != nil {
-				log.Error("failed to kill turtle-service: " + err.Error())
+				log.Error("failed to kill 2acoin-service: " + err.Error())
 			} else {
-				log.Info("turtle-service killed without error")
+				log.Info("2acoin-service killed without error")
 			}
 		} else {
 			_ = cmdWalletd.Process.Signal(syscall.SIGTERM)
@@ -522,14 +523,14 @@ func GracefullyQuitWalletd() {
 			select {
 			case <-time.After(5 * time.Second):
 				if err := cmdWalletd.Process.Kill(); err != nil {
-					log.Warning("failed to kill turtle-service: " + err.Error())
+					log.Warning("failed to kill 2acoin-service: " + err.Error())
 				}
-				log.Info("turtle-service killed as stopping process timed out")
+				log.Info("2acoin-service killed as stopping process timed out")
 			case err := <-done:
 				if err != nil {
-					log.Warning("turtle-service finished with error: " + err.Error())
+					log.Warning("2acoin-service finished with error: " + err.Error())
 				}
-				log.Info("turtle-service killed without error")
+				log.Info("2acoin-service killed successfully")
 			}
 		}
 	}
@@ -555,60 +556,60 @@ func killWalletd() {
 			select {
 			case <-time.After(500 * time.Millisecond):
 				if err := cmdWalletd.Process.Kill(); err != nil {
-					log.Warning("failed to kill turtle-service: " + err.Error())
+					log.Warning("failed to kill 2acoin-service: " + err.Error())
 				}
-				log.Info("turtle-service killed as stopping process timed out")
+				log.Info("2acoin-service killed as stopping process timed out")
 			case err := <-done:
 				if err != nil {
-					log.Warning("turtle-service finished with error: " + err.Error())
+					log.Warning("2acoin-service finished with error: " + err.Error())
 				}
-				log.Info("turtle-service killed without error")
+				log.Info("2acoin-service killed successfully")
 			}
 		}
 	}
 }
 
-// GracefullyQuitTurtleCoind stops the TurtleCoind daemon
-func GracefullyQuitTurtleCoind() {
+// GracefullyQuitxCoind stops the xCoind daemon
+func GracefullyQuitxCoind() {
 
-	if cmdTurtleCoind != nil {
+	if cmdxCoind != nil {
 		var err error
 
 		if isPlatformWindows {
-			// because syscall.SIGTERM does not work in windows. We have to kill TurtleCoind.
+			// because syscall.SIGTERM does not work in windows. We have to kill 2ACoind.
 
-			err = cmdTurtleCoind.Process.Kill()
+			err = cmdxCoind.Process.Kill()
 			if err != nil {
-				log.Error("failed to kill TurtleCoind: " + err.Error())
+				log.Error("failed to kill 2ACoind: " + err.Error())
 			} else {
-				log.Info("TurtleCoind killed without error")
+				log.Info("2ACoind killed without error")
 			}
 		} else {
-			_ = cmdTurtleCoind.Process.Signal(syscall.SIGTERM)
+			_ = cmdxCoind.Process.Signal(syscall.SIGTERM)
 			done := make(chan error, 1)
 			go func() {
-				done <- cmdTurtleCoind.Wait()
+				done <- cmdxCoind.Wait()
 			}()
 			select {
 			case <-time.After(5 * time.Second):
-				if err := cmdTurtleCoind.Process.Kill(); err != nil {
-					log.Warning("failed to kill TurtleCoind: " + err.Error())
+				if err := cmdxCoind.Process.Kill(); err != nil {
+					log.Warning("failed to kill 2ACoind: " + err.Error())
 				}
-				log.Info("TurtleCoind killed as stopping process timed out")
+				log.Info("2ACoind killed as stopping process timed out")
 			case err := <-done:
 				if err != nil {
-					log.Warning("TurtleCoind finished with error: " + err.Error())
+					log.Warning("2ACoind finished with error: " + err.Error())
 				}
-				log.Info("TurtleCoind killed without error")
+				log.Info("2ACoind killed successfully")
 			}
 		}
 	}
 
-	cmdTurtleCoind = nil
+	cmdxCoind = nil
 }
 
-// CreateWallet calls turtle-service to create a new wallet. If privateViewKey, privateSpendKey and mnemonicSeed are empty strings, a new wallet will be generated. If they are not empty, a wallet will be generated from those keys or from the seed (import)
-// walletFilename is the filename chosen by the user. The created wallet file will be located in the same folder as turtle-service.
+// CreateWallet calls 2acoin-service to create a new wallet. If privateViewKey, privateSpendKey and mnemonicSeed are empty strings, a new wallet will be generated. If they are not empty, a wallet will be generated from those keys or from the seed (import)
+// walletFilename is the filename chosen by the user. The created wallet file will be located in the same folder as 2acoin-service.
 // walletPassword is the password of the new wallet.
 // walletPasswordConfirmation is the repeat of the password for confirmation that the password was correctly entered.
 // privateViewKey is the private view key of the wallet.
@@ -617,7 +618,7 @@ func GracefullyQuitTurtleCoind() {
 func CreateWallet(walletFilename string, walletPassword string, walletPasswordConfirmation string, privateViewKey string, privateSpendKey string, mnemonicSeed string, scanHeight string) (err error) {
 
 	if WalletdOpenAndRunning {
-		return errors.New("turtle-service is already running. It should be stopped before being able to generate a new wallet")
+		return errors.New("2acoin-service is already running. It should be stopped before being able to generate a new wallet")
 	}
 
 	if strings.Contains(walletFilename, "/") || strings.Contains(walletFilename, " ") || strings.Contains(walletFilename, ":") {
@@ -625,7 +626,7 @@ func CreateWallet(walletFilename string, walletPassword string, walletPasswordCo
 	}
 
 	if isWalletdRunning() {
-		errorMessage := "turtle-service is already running in the background.\nPlease close it via "
+		errorMessage := "2acoin-service is already running in the background.\nPlease close it via "
 
 		if isPlatformWindows {
 			errorMessage += "the task manager"
@@ -658,7 +659,7 @@ func CreateWallet(walletFilename string, walletPassword string, walletPasswordCo
 			log.Fatal("error finding home directory. Error: ", err)
 		}
 		pathToHomeDir := usr.HomeDir
-		pathToAppLibDir := pathToHomeDir + "/Library/Application Support/TurtleCoin-Nest"
+		pathToAppLibDir := pathToHomeDir + "/Library/Application Support/2ACoin-WalletGo"
 
 		pathToLogWalletdCurrentSession = pathToAppLibDir + "/" + logWalletdCurrentSessionFilename
 		pathToLogWalletdAllSessions = pathToAppLibDir + "/" + logWalletdAllSessionsFilename
@@ -750,7 +751,7 @@ func CreateWallet(walletFilename string, walletPassword string, walletPasswordCo
 						errorMessage = errorMessage + line
 					}
 				} else {
-					errorMessage = "turtle-service stopped with unknown error"
+					errorMessage = "2acoin-service stopped with unknown error"
 				}
 
 				killWalletd()
@@ -780,7 +781,7 @@ func CreateWallet(walletFilename string, walletPassword string, walletPasswordCo
 // RequestConnectionInfo provides the blockchain sync status and the number of connected peers
 func RequestConnectionInfo() (syncing string, walletBlockCount int, knownBlockCount int, localDaemonBlockCount int, peerCount int, err error) {
 
-	walletBlockCount, knownBlockCount, localDaemonBlockCount, peerCount, err = turtlecoinwalletdrpcgo.RequestStatus(rpcPassword)
+	walletBlockCount, knownBlockCount, localDaemonBlockCount, peerCount, err = xcoinwalletdrpcgo.RequestStatus(rpcPassword)
 	if err != nil {
 		return "", 0, 0, 0, 0, err
 	}
@@ -805,7 +806,7 @@ func RequestConnectionInfo() (syncing string, walletBlockCount int, knownBlockCo
 // RequestFeeinfo provides the additional fee requested by the remote node for each transaction
 func RequestFeeinfo() (nodeFee float64, err error) {
 
-	_, nodeFee, _, err = turtlecoinwalletdrpcgo.GetFeeInfo(rpcPassword)
+	_, nodeFee, _, err = xcoinwalletdrpcgo.GetFeeInfo(rpcPassword)
 	if err != nil {
 		return 0, err
 	}
@@ -875,14 +876,14 @@ func isWalletdRunning() bool {
 	return false
 }
 
-func isTurtleCoindRunning() bool {
+func isxCoindRunning() bool {
 
-	if _, _, err := findProcess(turtlecoindCommandName); err == nil {
+	if _, _, err := findProcess(xcoindCommandName); err == nil {
 		return true
 	}
 
 	if isPlatformWindows {
-		if _, _, err := findProcess(turtlecoindCommandName + ".exe"); err == nil {
+		if _, _, err := findProcess(xcoindCommandName + ".exe"); err == nil {
 			return true
 		}
 	}

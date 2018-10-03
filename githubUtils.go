@@ -1,4 +1,5 @@
 // Copyright (c) 2018, The TurtleCoin Developers
+// Copyright (c) 2018, The 2ACoin Developers
 //
 // Please see the included LICENSE file for more information.
 //
@@ -14,7 +15,7 @@ type release struct {
 	URL     string `json:"html_url"`
 }
 
-const url = "https://api.github.com/repos/turtlecoin/turtle-wallet-go/releases/latest"
+const url = "https://api.github.com/repos/2acoin/2acoin-wallet-go/releases/latest"
 
 func checkIfNewReleaseAvailableOnGithub(currentVersion string) (newVersion string, urlNewVersion string) {
 

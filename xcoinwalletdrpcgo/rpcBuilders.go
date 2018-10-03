@@ -1,9 +1,10 @@
 // Copyright (c) 2018, The TurtleCoin Developers
+// Copyright (c) 2018, 2aCoin Developers
 //
 // Please see the included LICENSE file for more information.
 //
 
-package turtlecoinwalletdrpcgo
+package xcoinwalletdrpcgo
 
 // rpcPayload is the struct with the right formatting for passing to the post request
 type rpcPayload struct {
