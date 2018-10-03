@@ -1,8 +1,7 @@
+
 # 2ACoin-WalletGo
 
 The universal desktop GUI wallet for 2ACoin
-
-
 
 ## Installation
 
