@@ -16,7 +16,7 @@ const (
 
 	// default remote node
 	defaultRemoteDaemonAddress = "publicnode.2acoin.org"
-	defaultRemoteDaemonPort    = "17890"
+	defaultRemoteDaemonPort    = "17910"
 	defaultRemoteDaemonName    = "publicnode.2acoin.org"
 	defaultRemoteDaemonSSL     = false
 )

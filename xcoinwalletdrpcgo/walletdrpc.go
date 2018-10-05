@@ -32,7 +32,7 @@ type Transfer struct {
 }
 
 var (
-	rpcURL = "http://127.0.0.1:19760/json_rpc"
+	rpcURL = "http://127.0.0.1:8070/json_rpc"
 )
 
 // RequestBalance provides the available and locked balances of the current wallet
@@ -118,7 +118,7 @@ func RequestListTransactions(blockCount int, firstBlockIndex int, addresses []st
 	return transfers, nil
 }
 
-// RequestStatus requests turtle-service connection and sync status
+// RequestStatus requests 2acoin-service connection and sync status
 func RequestStatus(rpcPassword string) (walletBlockCount int, knownBlockCount int, localDaemonBlockCount int, peerCount int, err error) {
 
 	args := make(map[string]interface{})

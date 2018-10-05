@@ -325,7 +325,7 @@ func StartWalletd(walletPath string, walletPassword string, useRemoteNode bool, 
 
 		pathToLogWalletdCurrentSession = pathToAppLibDir + "/" + logWalletdCurrentSessionFilename
 		pathToLogWalletdAllSessions = pathToAppLibDir + "/" + logWalletdAllSessionsFilename
-		pathToLogxCoindCurrentSession = pathToAppLibDir + "/" + xCoindCurrentSessionFilename
+		pathToLogxCoindCurrentSession = pathToAppLibDir + "/" + logxCoindCurrentSessionFilename
 		pathToLogxCoindAllSessions = pathToAppLibDir + "/" + logxCoindAllSessionsFilename
 
 		if pathToWallet == WalletFilename {

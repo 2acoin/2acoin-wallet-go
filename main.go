@@ -213,9 +213,10 @@ func main() {
 
 	log.WithField("version", versionNest).Info("Application started")
 
-	go func() {
-		requestRatexCoin()
-	}()
+// 2AMiner - Comment out until we have a good source for this data.
+//	go func() {
+//		requestRatexCoin()
+//	}()
 
 	platform := "linux"
 	if isPlatformDarwin {
