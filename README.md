@@ -3,6 +3,8 @@
 
 The universal desktop GUI wallet for 2ACoin
 
+![Main Screen](/2acoin_logo.png)
+
 ## Installation
 
 [Windows](#windows) - [Mac](#mac) - [Linux](#linux)
