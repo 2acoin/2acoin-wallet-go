@@ -8,7 +8,7 @@ package main
 
 const (
 	versionNest                 = "0.01"
-	urlCryptoComparexCoin       = "https://oapi.bitexbay.com/v2/allticker.php?apikey=1ba2bfb58b99c7e93f91ba5219bd96ef41"
+	urlCryptoComparexCoin       = "https://oapi.bitexbay.com/v2/tickers.php?apikey=fb71387b6c7fda3c37679100d5fd7d01215134&tid=ARMS-BTC"
 	logFileFilename             = "2ACoin-WalletGo.log"
 	urlBlockExplorer            = "https://explorer.2acoin.org/"
 	dbFilename                  = "settings.db"

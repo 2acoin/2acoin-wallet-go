@@ -1071,7 +1071,7 @@ func getAndDisplayListRemoteNodes() {
 	preferedNodeFound := false
 
 	for index, aNode := range remoteNodes {
-		qmlBridge.AddRemoteNodeToList(aNode.URL)
+		qmlBridge.AddRemoteNodeToList(aNode.Name)
 
 		if addressPreferedNode != "" && aNode.URL == addressPreferedNode && aNode.Port == uint64(portPreferedNode) {
 			indexSelectedRemoteNode = index
