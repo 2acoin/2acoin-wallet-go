@@ -468,10 +468,10 @@ func getAndDisplayBalances() {
 
 	walletAvailableBalance, walletLockedBalance, walletTotalBalance, err := walletdmanager.RequestBalance()
 	if err == nil {
-		qmlBridge.DisplayAvailableBalance(humanize.FormatFloat("#,###.########", walletAvailableBalance))
-		qmlBridge.DisplayLockedBalance(humanize.FormatFloat("#,###.########", walletLockedBalance))
+		qmlBridge.DisplayAvailableBalance(humanize.FormatFloat("#,###.####", walletAvailableBalance))
+		qmlBridge.DisplayLockedBalance(humanize.FormatFloat("#,###.####", walletLockedBalance))
 		balanceUSD := walletTotalBalance * rateUSDxCoin
-		qmlBridge.DisplayTotalBalance(humanize.FormatFloat("#,###.########", walletTotalBalance), humanize.FormatFloat("#,###.########", balanceUSD))
+		qmlBridge.DisplayTotalBalance(humanize.FormatFloat("#,###.####", walletTotalBalance), humanize.FormatFloat("#,###.####", balanceUSD))
 	}
 }
 
@@ -561,7 +561,7 @@ func getAndDisplayListTransactions(forceFullUpdate bool) {
 					amountString += "- "
 					amountString += strconv.FormatFloat(-amount, 'f', -1, 64)
 				}
-				amountString += " xCoin (fee: " + strconv.FormatFloat(transfer.Fee, 'f', 2, 64) + ")"
+				amountString += " 2ACoin (fee: " + strconv.FormatFloat(transfer.Fee, 'f', 2, 64) + ")"
 				confirmationsString := confirmationsStringRepresentation(transfer.Confirmations)
 				timeString := transfer.Timestamp.Format("2006-01-02 15:04:05")
 				transactionNumberString := strconv.Itoa(transactionNumber) + ")"
@@ -605,7 +605,7 @@ func transfer(transferAddress string, transferAmount string, transferPaymentID s
 	getAndDisplayBalances()
 	qmlBridge.ClearTransferAmount()
 	qmlBridge.FinishedSendingTransaction()
-	qmlBridge.DisplayPopup("xCoins sent successfully", 4000)
+	qmlBridge.DisplayPopup("ARMS sent successfully", 4000)
 }
 
 func optimizeWalletWithFusion() {
@@ -644,13 +644,13 @@ func startWalletWithWalletInfo(pathToWallet string, passwordWallet string) bool 
 
 	err := walletdmanager.StartWalletd(pathToWallet, passwordWallet, useRemoteNode, useCheckpoints, remoteDaemonAddress, remoteDaemonPort)
 	if err != nil {
-		log.Warn("error starting xcoin-service with provided wallet info. error: ", err)
+		log.Warn("error starting 2acoin-service with provided wallet info. error: ", err)
 		qmlBridge.FinishedLoadingWalletd()
 		qmlBridge.DisplayErrorDialog("Error opening wallet.", err.Error())
 		return false
 	}
 
-	log.Info("success starting xcoin-service")
+	log.Info("success starting 2acoin-service")
 
 	qmlBridge.FinishedLoadingWalletd()
 	startDisplayWalletInfo()
