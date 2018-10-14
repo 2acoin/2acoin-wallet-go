@@ -910,7 +910,7 @@ Rectangle {
             anchors.top: textTransferFeeDescr.bottom
             anchors.topMargin: 7
             height: 25
-            width: 50
+            width: 55
             radius: 3
 
             TextInput {

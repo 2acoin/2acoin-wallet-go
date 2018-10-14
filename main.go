@@ -561,7 +561,7 @@ func getAndDisplayListTransactions(forceFullUpdate bool) {
 					amountString += "- "
 					amountString += strconv.FormatFloat(-amount, 'f', -1, 64)
 				}
-				amountString += " 2ACoin (fee: " + strconv.FormatFloat(transfer.Fee, 'f', 2, 64) + ")"
+				amountString += " ARMS (fee: " + strconv.FormatFloat(transfer.Fee, 'f', 4, 64) + ")"
 				confirmationsString := confirmationsStringRepresentation(transfer.Confirmations)
 				timeString := transfer.Timestamp.Format("2006-01-02 15:04:05")
 				transactionNumberString := strconv.Itoa(transactionNumber) + ")"
