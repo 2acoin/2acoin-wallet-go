@@ -113,3 +113,16 @@ gunsChty5KeJS86aJhsFxo998BUtnCPPmEeGLvJ6R6cSJaXXpf8We2XJFk38GgVJpZTH9eqMgvoC5SNc
 1. Include the latest _2acoin-service_ and _2ACoind_ builds in:
     * Windows: in the app folder
     * Mac: in 2ACoin-WalletGo.app/Contents/
+
+#### Thanks
+TurtleCoin, 2ACoin Developers and the 2ACoin Community
+
+### Copypasta for license when editing files
+
+Hi 2ACoin contributor, thanks for forking and sending back Pull Requests. Extensive docs about contributing are in the works or elsewhere. For now this is the bit we need to get into all the files we touch. Please add it to the top of the files, see [src/CryptoNoteConfig.h](https://github.com/2acoin/2acoin/blob/master/src/CryptoNoteConfig.h) for an example.
+
+
+    // Copyright (c) 2018, The TurtleCoin Developers
+    // Copyright (c) 2018, The 2ACoin Developers
+    // 
+    // Please see the included LICENSE file for more information.
