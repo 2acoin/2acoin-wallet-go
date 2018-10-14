@@ -46,7 +46,7 @@ Important notes:
 
 ## Upgrade
 
-Just download the new release and follow the same steps as [Installation](#installation). Just make sure you don't delete your wallet files in the old folder (.wallet files) and you copy them or move them to a new folder.
+Just download the new release and follow the same steps as [Installation](#installation). If you are on Windows or Linux, move your wallets (.wallet) and settings.db files from the old WalletGo folder to the new. Then you can delete the old folder. (on Mac, you do not need to move the settings.db file as it stays in ~/Library/Application Support/2ACoin-WalletGo/).
 
 ## Screenshots
 
@@ -114,10 +114,10 @@ gunsChty5KeJS86aJhsFxo998BUtnCPPmEeGLvJ6R6cSJaXXpf8We2XJFk38GgVJpZTH9eqMgvoC5SNc
     * Windows: in the app folder
     * Mac: in 2ACoin-WalletGo.app/Contents/
 
-#### Thanks
+## Thanks
 TurtleCoin, 2ACoin Developers and the 2ACoin Community
 
-### Copypasta for license when editing files
+## Copypasta for license when editing files
 
 Hi 2ACoin contributor, thanks for forking and sending back Pull Requests. Extensive docs about contributing are in the works or elsewhere. For now this is the bit we need to get into all the files we touch. Please add it to the top of the files, see [src/CryptoNoteConfig.h](https://github.com/2acoin/2acoin/blob/master/src/CryptoNoteConfig.h) for an example.
 
