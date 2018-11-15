@@ -32,7 +32,7 @@ type Transfer struct {
 }
 
 var (
-	rpcURL = "http://127.0.0.1:8070/json_rpc"
+	rpcURL = "http://127.0.0.1:17760/json_rpc"
 )
 
 // RequestBalance provides the available and locked balances of the current wallet

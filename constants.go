@@ -7,7 +7,7 @@
 package main
 
 const (
-	versionNest                 = "1.0.0"
+	versionNest                 = "1.0.2"
 	urlCryptoComparexCoin       = "https://api.kompler.exchange/v1/markets/BTC/ARMS"
 	logFileFilename             = "2ACoin-WalletGo.log"
 	urlBlockExplorer            = "https://explorer.2acoin.org/"
