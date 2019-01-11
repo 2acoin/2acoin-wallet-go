@@ -147,6 +147,7 @@ func SendTransaction(addressRecipient string, amount float64, paymentID string, 
 	args := make(map[string]interface{})
 	args["fee"] = feeInt
 	args["paymentId"] = paymentID
+	args["anonymity"] = 3
 	var transfers [1]map[string]interface{}
 	transfer := make(map[string]interface{})
 	transfer["amount"] = amountInt

@@ -7,8 +7,8 @@
 package main
 
 const (
-	versionNest                 = "1.0.3"
-	urlCryptoComparexCoin       = "https://api.kompler.exchange/v1/markets/BTC/ARMS"
+	versionNest                 = "1.0.4"
+	urlCryptoComparexCoin       = "https://api.coingecko.com/api/v3/simple/price?ids=2acoin&vs_currencies=USD"
 	logFileFilename             = "2ACoin-WalletGo.log"
 	urlBlockExplorer            = "https://explorer.2acoin.org/"
 	dbFilename                  = "settings.db"

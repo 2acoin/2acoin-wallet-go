@@ -213,10 +213,9 @@ func main() {
 
 	log.WithField("version", versionNest).Info("Application started")
 
-// 2AMiner - Comment out until we have a good source for this data.
-//	go func() {
-//		requestRatexCoin()
-//	}()
+	go func() {
+		requestRatexCoin()
+	}()
 
 	platform := "linux"
 	if isPlatformDarwin {
@@ -1056,7 +1055,8 @@ func requestRatexCoin() {
 				log.Error("error JSON unmarshaling request cryptocompare: ", err)
 			} else {
 				resultsMap := resultInterface.(map[string]interface{})
-				rateUSDxCoin = resultsMap["USD"].(float64)
+				rateUSDxCoin = resultsMap["2acoin"].(map[string]interface{})["usd"].(float64)
+				log.Info("Rate found is: ", rateUSDxCoin)
 			}
 		}
 	}
