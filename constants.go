@@ -7,7 +7,7 @@
 package main
 
 const (
-	versionNest                 = "1.0.4"
+	versionNest                 = "1.0.5"
 	urlCryptoComparexCoin       = "https://api.coingecko.com/api/v3/simple/price?ids=2acoin&vs_currencies=USD"
 	logFileFilename             = "2ACoin-WalletGo.log"
 	urlBlockExplorer            = "https://explorer.2acoin.org/"
