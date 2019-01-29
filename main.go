@@ -470,7 +470,7 @@ func getAndDisplayBalances() {
 		qmlBridge.DisplayAvailableBalance(humanize.FormatFloat("#,###.####", walletAvailableBalance))
 		qmlBridge.DisplayLockedBalance(humanize.FormatFloat("#,###.####", walletLockedBalance))
 		balanceUSD := walletTotalBalance * rateUSDxCoin
-		qmlBridge.DisplayTotalBalance(humanize.FormatFloat("#,###.####", walletTotalBalance), humanize.FormatFloat("#,###.####", balanceUSD))
+		qmlBridge.DisplayTotalBalance(humanize.FormatFloat("#,###.####", walletTotalBalance), humanize.FormatFloat("#,###.##", balanceUSD))
 	}
 }
 

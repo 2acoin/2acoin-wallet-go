@@ -221,7 +221,7 @@ Rectangle {
             anchors.bottomMargin: 10
             anchors.horizontalCenter: parent.horizontalCenter
             font.family: "Arial"
-            font.pixelSize: 30
+            font.pixelSize: 25
             font.bold: true
             anchors.horizontalCenterOffset: 0
             horizontalAlignment: Text.AlignRight
@@ -251,7 +251,7 @@ Rectangle {
             anchors.top: textBalanceUnit.bottom
             anchors.topMargin: 8
             font.family: "Arial"
-            font.pixelSize: 15
+            font.pixelSize: 18
             horizontalAlignment: Text.AlignRight
             visible: false
         }
@@ -259,13 +259,13 @@ Rectangle {
         Text {
             id: textUSD
             color: "#858585"
-            text: "$"
+            text: "USD"
             anchors.left: textBalanceUnit.left
             anchors.leftMargin: 0
             anchors.bottom: textBalanceUSD.bottom
             anchors.bottomMargin: 0
             font.family: "Arial"
-            font.pixelSize: 15
+            font.pixelSize: 18
             horizontalAlignment: Text.AlignLeft
             visible: false
         }
@@ -1434,7 +1434,7 @@ Rectangle {
 
         onDisplayTotalBalance: {
             textBalanceValue.text = balance;
-            textBalanceUSD.text = balanceUSD;
+            textBalanceUSD.text = "$ " + balanceUSD;
         }
 
         onDisplayAddress: {
