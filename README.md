@@ -1,9 +1,9 @@
 
-# 2ACoin-WalletGo
+# 2ACoin-WalletGo v1.0.7
 
 The universal desktop GUI wallet for 2ACoin
 
-![Main Screen](/2acoin_logo.png)
+![Main Screen](https://i.imgur.com/TvgbIeA.png)
 
 ## Installation
 
@@ -123,6 +123,6 @@ Hi 2ACoin contributor, thanks for forking and sending back Pull Requests. Extens
 
 
     // Copyright (c) 2018, The TurtleCoin Developers
-    // Copyright (c) 2018, The 2ACoin Developers
+    // Copyright (c) 2019, The 2ACoin Developers
     // 
     // Please see the included LICENSE file for more information.

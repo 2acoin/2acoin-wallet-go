@@ -282,4 +282,4 @@ At different points in time (based on block height), 2ACoin had optional mixins 
 
 - in 2acoinwalletdrpcgo/walletdrpc.go:
 
-    - `rpcURL = "http://127.0.0.1:8070/json_rpc"`: change the port (8070) to another one if you changed that parameter.
+    - `rpcURL = "http://127.0.0.1:17760/json_rpc"`: change the port (17760) to another one if you changed that parameter.

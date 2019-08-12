@@ -1,5 +1,5 @@
 // Copyright (c) 2018, The TurtleCoin Developers
-// Copyright (c) 2018, 2ACoin Developers
+// Copyright (c) 2019, 2ACoin Developers
 //
 // Please see the included LICENSE file for more information.
 //
@@ -7,7 +7,7 @@
 package main
 
 const (
-	versionNest                 = "1.0.6"
+	versionNest                 = "1.0.7"
 	urlCryptoComparexCoin       = "https://api.coingecko.com/api/v3/simple/price?ids=2acoin&vs_currencies=USD"
 	logFileFilename             = "2ACoin-WalletGo.log"
 	urlBlockExplorer            = "https://explorer.2acoin.org/"
