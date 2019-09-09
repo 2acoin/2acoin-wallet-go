@@ -1,5 +1,5 @@
 
-# 2ACoin-WalletGo v1.0.7
+# 2ACoin-WalletGo
 
 The universal desktop GUI wallet for 2ACoin
 
