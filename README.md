@@ -17,6 +17,7 @@ The universal desktop GUI wallet for 2ACoin
 Important notes:
 
 * Make sure *2acoin-service.exe* is not running before you start *2Acoin-WalletGo*
+* The wallets you create or generate will be saved to your home folder. You can keep them there or move them wherever you want. We suggest creating a `.wallets` subfolder and storing your wallets seperate from the app files.
 
 ### Mac
 
@@ -26,7 +27,7 @@ Important notes:
 
 Important notes:
 
-* The wallets you create or generate will be saved to your home folder. You can keep them there or move them wherever you want.
+* The wallets you create or generate will be saved to your home folder. You can keep them there or move them wherever you want. We suggest creating a `.wallets` subfolder and storing your wallets seperate from the app files.
 * Make sure *2acoin-service* is not running before you start *2ACoin-WalletGo*.
 * If you encounter crashes, open the activity monitor (in your app > utilities), and force quit *2acoin-service* (if it is running) before opening a wallet.
 * The log files will be saved in ~/Library/Application Support/2ACoin-WalletGo/.
@@ -41,6 +42,7 @@ Important notes:
 Important notes:
 
 * Make sure *2acoin-service* is not running before you start *2ACoin-WalletGo*
+* The wallets you create or generate will be saved to your home folder. You can keep them there or move them wherever you want. We suggest creating a `.wallets` subfolder and storing your wallets seperate from the app files.
 * If you want the *copy address to clipboard* button to work, install *xclip* or *xsel* (on Debian/Ubuntu: `$ sudo apt install xclip`).
 * If you encounter crashes, open an activity monitor (e.g. `$ htop`), and quit *2acoin-service* (if it is running) before opening a wallet. (this bug is being worked on)
 
@@ -63,7 +65,7 @@ gunsChty5KeJS86aJhsFxo998BUtnCPPmEeGLvJ6R6cSJaXXpf8We2XJFk38GgVJpZTH9eqMgvoC5SNc
 
 ### Linux
 
-1. Download Go from [here](https://golang.org/dl/)
+1. Download **Go** from [here](https://golang.org/dl/)
 
 2. Use `tar -C /usr/local -xzf go$VERSION.$OS-$ARCH.tar.gz` to extract the downloaded go package.
 
@@ -83,8 +85,8 @@ gunsChty5KeJS86aJhsFxo998BUtnCPPmEeGLvJ6R6cSJaXXpf8We2XJFk38GgVJpZTH9eqMgvoC5SNc
     CGO_LDFLAGS_ALLOW=".*" 
     CGO_CFLAGS_ALLOW=".*" 
     ```
-5. Follow the instructions present [here](https://github.com/therecipe/qt/wiki/Installation-on-Linux) till **Run the setup** to install Qt which is the most important binding required to build Nest.
-6. Type the following commands to clone the Nest wallet, install dependencies and build the wallet.
+5. Follow the instructions present [here](https://github.com/therecipe/qt/wiki/Installation-on-Linux) till **Run the setup** to install **Qt** which is the most important binding required to build **2ACoin-Wallet-Go**.
+6. Type the following commands to clone the **2ACoin-Wallet-Go** source, install dependencies and build the wallet.
     ```
     $ cd $HOME/go/src
     $ git clone https://github.com/2acoincoin/2acoin-wallet-go.git 2ACoin-WalletGo
@@ -93,20 +95,25 @@ gunsChty5KeJS86aJhsFxo998BUtnCPPmEeGLvJ6R6cSJaXXpf8We2XJFk38GgVJpZTH9eqMgvoC5SNc
     ```
 
 1. The app folder is in deploy/linux/
-1. Include the latest _2acoin-service_ and _2ACoind_ builds in the app folder
+2. Include the latest _2acoin-service_ and _2ACoind_ builds in the app folder
 
 ### Windows - Mac
 
-1. Install Go (https://golang.org/doc/install)
+1. Install **Go** (https://golang.org/doc/install)
 
 1. Install this binding: https://github.com/therecipe/qt (installation instructions at https://github.com/therecipe/qt/wiki/Installation)
 
-1. Insall Go libraries (in console or terminal):
+1. Install **Go** libraries (in console or terminal):
     ```
     $ go get github.com/atotto/clipboard github.com/dustin/go-humanize github.com/mattn/go-sqlite3 github.com/mcuadros/go-version github.com/mitchellh/go-ps github.com/pkg/errors
     ```
 
-1. Run `qtdeploy build desktop`
+1. Clone the **2ACoin-Wallet-Go** source  
+	```
+	$ git clone https://github.com/2acoincoin/2acoin-wallet-go.git 2ACoin-WalletGo
+	```
+
+2. Run `qtdeploy build desktop`
 
 1. The app folder is in deploy/*your os*/
 
